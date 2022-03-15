@@ -4,21 +4,25 @@ class BullsAndCows{
         this.hints = {};
         this.attempts = 0;
         this.noLuckMessages = [
-            "Sorry, no luck this time",
-            ""
+            "sorry, no luck this time :( ",
+            "BINGO!\nJust kidding - WRONG!",
+            "you might as well give up now!",
+            "you really aren't very good at this, are you?"
         ];
     }
 
     validateInput(input){
         const isInteger = Number.isInteger(+input);
-        const hasValidLengthAndUniqueDigits = (new Set(input)).size === 4;
-        return isInteger && hasValidLengthAndUniqueDigits;
+        const hadValidLength = input.length === 4;
+        const hasUniqueDigits = (new Set(input)).size === 4;
+
+        return isInteger && hadValidLength && hasUniqueDigits;
     }
 
     generateSecretDigits(){
         let randomDigits = new Set();
         while(randomDigits.size !== 4){
-            randomDigits.add(Math.ceil(Math.random() * 9));
+            randomDigits.add(Math.floor(Math.random() * 10));
         }
 
         return Array.from(randomDigits).join('');
@@ -36,11 +40,16 @@ class BullsAndCows{
         }, {bull: 0, cow: 0}); 
 
         this.hints = {...hint};
+        this.attempts++;
         return hint;
     }
 
     getHints(){
-      return `Hint: ${this.hints.bull} ${String.fromCodePoint(0x1F402)} and ${this.hints.cow} ${String.fromCodePoint(0x1F404)}`; 
+        if(this.hints.bull === 0 && this.hints.cow === 0){
+            let randomIndex = Math.floor(Math.random() * this.noLuckMessages.length);
+            return this.noLuckMessages[randomIndex];
+          }else
+            return `here's a hint: ${this.hints.bull} ${String.fromCodePoint(0x1F402)} and ${this.hints.cow} ${String.fromCodePoint(0x1F404)}`; 
     }
 }
 
